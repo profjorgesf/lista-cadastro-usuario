@@ -29,9 +29,12 @@ function desenhar(){
 
 function insertUsuario(nome, fone){
     const id = listaRegistros.ultimoIdGerado + 1;
+    listaRegistros.ultimoIdGerado = id;
     listaRegistros.usuarios.push({
         id, nome, fone
     })
+    desenhar()
+    visualizar('lista')
 }
 
 function editUsuario(id, nome, fone){
@@ -51,15 +54,24 @@ function visualizar(pagina){
 }
 
 function submeter(e){
-    e.preventDeful()
-
+    e.preventDefault()
+    const data = {
+        id: document.getElementById('id').value,
+        nome: document.getElementById('nome').value,
+        fone: document.getElementById('fone').value,
+    }
+    if(data.id ){
+        editUsuario(...data)
+    }else{
+        insertUsuario(data.nome, data.fone)
+    }
+    console.log(data)
 }
-
 
 window.addEventListener('load',() => {
     desenhar()
-
-    document.getElementById('cadastroRegistro').addEventListener('submit',submeter)
+    document.getElementById('cadastroRegistro').addEventListener
+    ('submit',submeter)
 
 
 
