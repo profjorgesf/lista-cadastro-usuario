@@ -1,11 +1,24 @@
+const KEY_BD = '@usuariosestudo';
+
+
 var listaRegistros = {
     ultimoIdGerado:0,
     usuarios:[
-        {id:1 , nome:'Cassio', fone:'41 98480-0001'},
-        {id:2 , nome:'Pedro', fone:'41 98480-0002'},
-        {id:3 , nome:'Maria', fone:'41 98480-0003'},
-        {id:4 , nome:'Amanda', fone:'41 98480-0004'},
+        
     ]
+}
+
+function gravarBd(){
+    localStorage.setItem(KEY_BD, JSON.stringify(listaRegistros))
+
+}
+
+function lerBd(){
+    const data = localStorage.getItem(KEY_BD)
+    if(data){
+        listaRegistros= JSON.parse(data)
+    }
+    desenhar()
 }
 
 function desenhar(){
@@ -33,6 +46,7 @@ function insertUsuario(nome, fone){
     listaRegistros.usuarios.push({
         id, nome, fone
     })
+    gravarBd()
     desenhar()
     visualizar('lista')
 }
@@ -43,6 +57,10 @@ function editUsuario(id, nome, fone){
 
 function deleteUsuario(id){
 
+}
+
+function limparEdicao(){
+    
 }
 
 
@@ -69,7 +87,7 @@ function submeter(e){
 }
 
 window.addEventListener('load',() => {
-    desenhar()
+    lerBd()
     document.getElementById('cadastroRegistro').addEventListener
     ('submit',submeter)
 
