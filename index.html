@@ -54,6 +54,11 @@
             background-color: #ccc;
             color: #666;
         }
+
+        button.vermelho{
+            background-color: #f70808;
+            
+        }
         button:hover{
             opacity: 0.8;
         }
@@ -81,6 +86,7 @@
                     <th>id</th>
                     <th>Nome</th>
                     <th>Fone</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="listaRegistrosBody">
@@ -89,7 +95,7 @@
         </table>
 
         <div>
-            <button onclick="visualizar ('cadastro')">Novo Usuário</button>
+            <button onclick="visualizar ('cadastro',true)">Novo Usuário</button>
         </div>
     </div>
 

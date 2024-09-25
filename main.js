@@ -27,14 +27,16 @@ function desenhar(){
         tbody.innerHTML = listaRegistros.usuarios
         .sort((a, b) => {
             return a.nome < b.nome ? -1: 1
-        })
-        
-        
+        })       
         .map(usuario => {
             return `<tr>
                 <td>${usuario.id}</td>
                 <td>${usuario.nome}</td>
-                <td>${usuario.fone}</td>            
+                <td>${usuario.fone}</td>  
+                <td>
+                    <button onclick='visualizar ("cadastro", false,${usuario.id})'>Editar</button>
+                    <button class='vermelho' onclick='perguntarSeDeleta(${usuario.id})'>Deletar</button>
+                </td>          
             </tr>`
         }).join('')
     }
@@ -56,17 +58,39 @@ function editUsuario(id, nome, fone){
 }
 
 function deleteUsuario(id){
+    listaRegistros.usuarios = listaRegistros.usuarios.filter(usuario =>{
+        return usuario.id != id
+    })
+    gravarBd()
+    desenhar()
 
+}
+
+function perguntarSeDeleta(id){
+    if(confirm('Quer deletar o registro do id'+id)){
+        deleteUsuario(id)
+        desenhar()
+    }
 }
 
 function limparEdicao(){
-    
+    document.getElementById('nome').value = ''
+    document.getElementById('fone').value = ''
 }
 
 
-function visualizar(pagina){
+function visualizar(pagina, novo=false, id=null){
     document.body.setAttribute('page',pagina)
     if(pagina === 'cadastro'){
+        if(novo) limparEdicao()
+        if(id){
+            const usuario = listaRegistros.usuarios.find(usuario => usuario.id == id)
+            if(usuario){
+                document.getElementById('id').value = usuario.id
+                document.getElementById('nome').value = usuario.nome
+                document.getElementById('fone').value = usuario.fone
+            }
+        }
         document.getElementById('nome').focus();
     }
 }
