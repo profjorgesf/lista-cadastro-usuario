@@ -8,6 +8,8 @@ var listaRegistros = {
     ]
 }
 
+var FILTRO = ''
+
 function gravarBd(){
     localStorage.setItem(KEY_BD, JSON.stringify(listaRegistros))
 
@@ -21,10 +23,23 @@ function lerBd(){
     desenhar()
 }
 
+function pesquisar(value){
+    FILTRO = value;
+    desenhar();
+
+}
+
 function desenhar(){
     const tbody = document.getElementById('listaRegistrosBody');
     if(tbody){
-        tbody.innerHTML = listaRegistros.usuarios
+        var data = listaRegistros.usuarios
+        if(FILTRO.trim()){
+            const expReg = eval(`/${FILTRO.trim().replace(/[^\d\w]+/g, '.*')}/i`)
+            data = data.filter(usuario => {
+                return expReg.test(usuario.nome) || expReg.test(usuario.fone)
+            })
+        }
+        data = data        
         .sort((a, b) => {
             return a.nome < b.nome ? -1: 1
         })       
@@ -38,7 +53,8 @@ function desenhar(){
                     <button class='vermelho' onclick='perguntarSeDeleta(${usuario.id})'>Deletar</button>
                 </td>          
             </tr>`
-        }).join('')
+        })
+        tbody.innerHTML = data.join('')
     }
 }
 
@@ -54,6 +70,12 @@ function insertUsuario(nome, fone){
 }
 
 function editUsuario(id, nome, fone){
+    var usuario = listaRegistros.usuarios.find(usuario => usuario.id == id)
+    usuario.fone = fone;
+    usuario.nome = nome;
+    gravarBd();
+    desenhar();
+    visualizar('lista');
 
 }
 
@@ -103,7 +125,7 @@ function submeter(e){
         fone: document.getElementById('fone').value,
     }
     if(data.id ){
-        editUsuario(...data)
+        editUsuario(data.id, data.nome, data.fone)
     }else{
         insertUsuario(data.nome, data.fone)
     }
@@ -112,9 +134,8 @@ function submeter(e){
 
 window.addEventListener('load',() => {
     lerBd()
-    document.getElementById('cadastroRegistro').addEventListener
-    ('submit',submeter)
-
+    document.getElementById('cadastroRegistro').addEventListener('submit',submeter)
+    document.getElementById('inputPesquisa').addEventListener('keyup',e => {pesquisar(e.target.value)})
 
 
 });
